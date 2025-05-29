@@ -1,0 +1,84 @@
+/* globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FAFAFA;
+  --foreground: #111827;
+  --accent: #2A99A3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0A0A0A;
+    --foreground: #EDEDED;
+    --accent: #2A99A3;
+  }
+}
+
+body {
+  @apply bg-background text-foreground min-h-screen font-sans m-0 p-0;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+button {
+  @apply bg-accent text-white rounded-xl px-6 py-3 font-semibold transition ease-in-out duration-300;
+}
+
+button:hover {
+  background-color: #237c85;
+  transform: scale(1.03);
+}
+
+input, select {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid #D1D5DB;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Clases personalizadas */
+@layer utilities {
+  .text-accent {
+    color: var(--accent);
+  }
+  .bg-accent {
+    background-color: var(--accent);
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4rem;
+  justify-content: center;
+  align-items: center;
+}

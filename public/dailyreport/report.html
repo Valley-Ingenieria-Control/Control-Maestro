@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario - Daily Report</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <style>
+    /* Panel de firma */
+    .signature-pad-container {
+      margin: 32px 0 12px 0;
+      text-align: left;
+    }
+    .signature-pad-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #2a3b4d;
+    }
+    .signature-pad {
+      border: 2px solid #cfd8e3;
+      border-radius: 8px;
+      background: #fff;
+      width: 100%;
+      max-width: 480px;
+      height: 180px;
+      touch-action: none;
+      cursor: crosshair;
+      display: block;
+    }
+    .signature-pad-actions {
+      margin-top: 8px;
+    }
+    .signature-pad-actions button {
+      background: rgba(74, 144, 226, 0.18);
+      color: #205080;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 16px;
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .signature-pad-actions button:hover {
+      background: rgba(74, 144, 226, 0.28);
+      color: #17406a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="APC-logo.png" alt="Trekan Spa" class="logo-trekan" />
+    <h1>Daily Report</h1>
+    <form id="dailyReportForm">
+
+      <!-- Sección Condición Climática -->
+      <div class="row">
+        <div style="flex:1">
+          <label for="clima">Condición climática</label>
+          <select id="clima" name="clima" required>
+            <option value="">Seleccione</option>
+            <option value="Nublado">Nublado</option>
+            <option value="Lluvia">Lluvia</option>
+            <option value="Soleado">Soleado</option>
+            <option value="Humedo">Húmedo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="flex:1">
+          <label>Fecha</label>
+          <input type="date" id="date" required />
+        </div>
+        <div style="flex:1">
+          <label>Turno</label>
+          <select id="shift" required>
+            <option value="">Seleccione</option>
+            <option>Día</option>
+            <option>Noche</option>
+            <option>Especial</option>
+          </select>
+        </div>
+        <div style="flex:1">
+          <label>Supervisor</label>
+          <input type="text" id="supervisor" readonly />
+        </div>
+      </div>
+
+      <h2>1. Selección de Cuadrilla</h2>
+      <div id="cuadrillaSelector"></div>
+      <div id="cuadrillaSeleccionada"></div>
+
+      <h2>2. Selección de Tareas y TAGs</h2>
+      <div id="tareasSelector"></div>
+      <div id="tareasSeleccionadas"></div>
+
+      <div class="row">
+        <button type="button" id="generarDistribucionBtn" class="main-btn" disabled>Distribuir HH y TAGs</button>
+      </div>
+
+      <div id="hhDistribucion"></div>
+      <div id="tagsDistribucion"></div>
+
+      <div class="row">
+        <label>Comentarios generales del turno</label>
+        <textarea id="comments" rows="3"></textarea>
+      </div>
+
+      <!-- Panel de firma -->
+      <div class="signature-pad-container">
+        <div class="signature-pad-title">Firma del responsable</div>
+        <canvas id="signaturePad" class="signature-pad"></canvas>
+        <div class="signature-pad-actions">
+          <button type="button" id="clearSignature">Limpiar firma</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <button type="submit" class="main-btn">Enviar Reporte</button>
+      </div>
+      <div id="formError" class="error"></div>
+    </form>
+  </div>
+
+  <script src="users.js"></script>
+  <script src="workers.js"></script>
+  <script src="activities.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Panel de firma simple
+    const canvas = document.getElementById('signaturePad');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let drawing = false, lastX = 0, lastY = 0;
+
+      function getPos(e) {
+        if (e.touches && e.touches.length === 1) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+          };
+        } else {
+          return { x: e.offsetX, y: e.offsetY };
+        }
+      }
+
+      function startDraw(e) {
+        drawing = true;
+        const pos = getPos(e);
+        lastX = pos.x;
+        lastY = pos.y;
+      }
+      function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.strokeStyle = "#223";
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        lastX = pos.x;
+        lastY = pos.y;
+      }
+      function stopDraw() {
+        drawing = false;
+      }
+
+      // Eventos mouse
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('mouseleave', stopDraw);
+
+      // Eventos touch
+      canvas.addEventListener('touchstart', startDraw, {passive: false});
+      canvas.addEventListener('touchmove', draw, {passive: false});
+      canvas.addEventListener('touchend', stopDraw);
+
+      // Limpiar firma
+      document.getElementById('clearSignature').onclick = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
+
+      // Ajustar tamaño responsivo
+      function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(ratio, ratio);
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    }
+  </script>
+</body>
+</html>

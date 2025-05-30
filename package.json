@@ -2,13 +2,12 @@
   "name": "virtual-valley-frontend",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev --turbo",
-    "prebuild": "npm run lint",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
+"scripts": {
+  "dev": "next dev --turbo",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
+},
   "dependencies": {
     "file-saver": "^2.0.5",
     "framer-motion": "^12.7.4",

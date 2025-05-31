@@ -1,30 +1,23 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 import os
-from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-# Cargar variables del archivo .env
-load_dotenv()
-
-# Leer la URL de conexión desde el archivo .env
+# Leer desde entorno (ya no usamos .env en producción)
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Crear el engine con SSL (Azure requiere cifrado SSL)
+if not SQLALCHEMY_DATABASE_URL:
+    raise RuntimeError("No se encontró DATABASE_URL en las variables de entorno.")
+
+# Azure requiere SSL en conexión a PostgreSQL
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={
-        "sslmode": "require"
-    }
+    connect_args={"sslmode": "require"}
 )
 
-# Sesión de base de datos
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base para los modelos
 Base = declarative_base()
 
-# Dependencia para obtener sesión en rutas
 def get_db():
     db = SessionLocal()
     try:

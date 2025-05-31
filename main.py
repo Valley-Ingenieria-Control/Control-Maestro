@@ -17,7 +17,12 @@ from routers import dashboard_routes
 
 app = FastAPI()
 
-# CORS habilitado para el frontend en localhost:3000
+# ✅ Ruta raíz para validación desde navegador
+@app.get("/")
+def read_root():
+    return {"status": "API de Virtual Valley corriendo"}
+
+# CORS habilitado dinámicamente
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 
 app.add_middleware(
@@ -50,6 +55,6 @@ def serve_image(filename: str):
 # Routers del sistema
 app.include_router(imagenes360_routes.router)
 app.include_router(reporte_routes.router)
-app.include_router(email_routes.router)         # ✅ Ruta para envío de correo con Excel
-app.include_router(email_log_routes.router)     # ✅ Ruta para consultar logs de correos
-app.include_router(dashboard_routes.router)     # ✅ Ruta para KPIs desde Excel
+app.include_router(email_routes.router)
+app.include_router(email_log_routes.router)
+app.include_router(dashboard_routes.router)

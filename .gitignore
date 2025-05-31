@@ -1,3 +1,4 @@
+# === FRONTEND ===
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -32,10 +33,45 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-
-# vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# === BACKEND ===
+# Entorno virtual y cachés
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.vscode/
+.idea/
+
+# Archivos sensibles y configuraciones locales
+.env
+*.log
+*.sqlite3
+*.db
+
+# Archivos subidos dinámicamente por usuarios
+excels/
+uploads/
+images/uploads/
+
+# Archivos temporales comunes
+*.zip
+*.tar.gz
+*.bak
+*.tmp
+
+# Reportes generados automáticamente
+*.csv
+*.xlsx
+*.xls
+
+# Ignorar datos exportados
+*.pdf
+*.json

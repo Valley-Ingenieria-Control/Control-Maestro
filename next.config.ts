@@ -1,15 +1,17 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  output: "standalone",
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL
   },
   images: {
-    domains: ['localhost', 'virtualvalley.azurewebsites.net'],
-  },
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "virtualvalley-backend-fsenhqcylxhbdpha.chilecentral-01.azurewebsites.net",
+        pathname: "/images/**"
+      }
+    ]
+  }
 };
 
 export default nextConfig;

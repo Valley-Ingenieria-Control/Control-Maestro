@@ -11,20 +11,17 @@ from routers import reporte_routes
 # ✅ Nuevos routers
 from routers import email_routes
 from routers import email_log_routes
-
-# Router input para dashboard
 from routers import dashboard_routes
 
 app = FastAPI()
 
-# ✅ Ruta raíz para validación desde navegador
-@app.get("/")
-def read_root():
-    return {"status": "API de Virtual Valley corriendo"}
+# ✅ Dominios permitidos para CORS
+allowed_origins = [
+    "http://localhost:3000",  # entorno local de desarrollo
+    "https://virtualvalley-backend-fsenhqcylxhbdpha.chilecentral-01.azurewebsites.net",  # backend Azure
+]
 
-# CORS habilitado dinámicamente
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
-
+# ✅ Middleware CORS configurado
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
@@ -33,10 +30,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Montar carpeta estática para imágenes
+# ✅ Ruta raíz para confirmar estado API
+@app.get("/")
+def read_root():
+    return {"status": "API de Virtual Valley corriendo"}
+
+# ✅ Montaje de carpeta estática de imágenes
 app.mount("/images", StaticFiles(directory="static/images"), name="images")
 
-# Ruta de acceso a imágenes con headers explícitos
+# ✅ Ruta explícita para servir imágenes
 @app.get("/images/{filename}")
 def serve_image(filename: str):
     file_path = os.path.join("static", "images", filename)
@@ -47,12 +49,12 @@ def serve_image(filename: str):
         path=file_path,
         media_type="image/jpeg",
         headers={
-            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Origin": "*",  # puedes hacer esto más restrictivo si lo deseas
             "Access-Control-Allow-Credentials": "true"
         }
     )
 
-# Routers del sistema
+# ✅ Registro de rutas de negocio
 app.include_router(imagenes360_routes.router)
 app.include_router(reporte_routes.router)
 app.include_router(email_routes.router)

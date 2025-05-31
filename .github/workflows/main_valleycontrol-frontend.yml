@@ -33,7 +33,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nextjs-app
+          name: node-app
           path: release.zip
 
   deploy:
@@ -47,12 +47,12 @@ jobs:
       contents: read
 
     steps:
-      - name: Download artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: nextjs-app
+          name: node-app
 
-      - name: Unzip for deployment
+      - name: Unzip artifact
         run: unzip release.zip
 
       - name: Azure Login
@@ -69,5 +69,4 @@ jobs:
           app-name: 'valleycontrol-frontend'
           slot-name: 'Production'
           package: .
-
-          
+          clean: true

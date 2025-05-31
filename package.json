@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start -p 8080",
     "export": "next export"
   },
   "dependencies": {

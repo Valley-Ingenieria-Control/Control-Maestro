@@ -1,0 +1,36 @@
+# Entorno virtual y cachés
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.vscode/
+.idea/
+.DS_Store
+
+# Archivos sensibles y configuraciones locales
+.env
+*.log
+*.sqlite3
+*.db
+
+# Archivos subidos dinámicamente por usuarios
+excels/
+uploads/
+images/uploads/
+
+# Archivos temporales comunes
+*.zip
+*.tar.gz
+*.bak
+*.tmp
+
+# Reportes generados automáticamente
+*.csv
+*.xlsx
+*.xls
+
+# Ignorar datos exportados
+*.pdf
+*.json
